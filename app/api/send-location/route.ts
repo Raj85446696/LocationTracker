@@ -15,6 +15,10 @@ export async function POST(request: Request) {
       );
     }
 
+    console.log("SMTP HOST:", process.env.SMTP_HOST);
+    console.log("SMTP PORT:", process.env.SMTP_PORT);
+    console.log("SMTP USER:", process.env.SMTP_USER);
+
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
       port: Number(process.env.SMTP_PORT),
@@ -25,7 +29,12 @@ export async function POST(request: Request) {
       },
     });
 
-    const mapsUrl = `https://www.google.com/maps?q=${latitude},${longitude}`;
+    await transporter.verify();
+
+    console.log("SMTP connection successful");
+
+    const mapsUrl =
+      `https://www.google.com/maps?q=${latitude},${longitude}`;
 
     await transporter.sendMail({
       from: process.env.SMTP_USER,
